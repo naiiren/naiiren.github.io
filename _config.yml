@@ -1,0 +1,13 @@
+title: Nairen's Blog
+# email: nairen@smail.nju.edu.cn
+description: ""
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "naiiren.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+
+remote_theme: jekyll/minima
+
+plugins:
+  - jekyll-feed
+  - jekyll-remote-theme
+
+plugins:
