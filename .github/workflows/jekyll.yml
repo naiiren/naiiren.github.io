@@ -18,7 +18,6 @@ jobs:
     permissions:
       contents: read
       pages: write
-      id-token: write
     
     steps:
     - name: Checkout
@@ -40,19 +39,52 @@ jobs:
         chmod +x ./restore_assets.sh
         ./restore_assets.sh
     
+    - name: Debug workspace structure
+      run: |
+        echo "=== Workspace structure ==="
+        find . -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.svg" -o -name "*.webp" | head -20
+        echo "=== _articles directory ==="
+        ls -la _articles/ || echo "_articles directory not found"
+        echo "=== _articles/assets directory ==="
+        ls -la _articles/assets/ || echo "_articles/assets directory not found"
+        echo "=== assets directory before copy ==="
+        ls -la assets/ || echo "assets directory not found"
+    
     - name: Copy assets from _articles to main assets directory
       run: |
         if [ -d "_articles/assets" ]; then
           echo "Copying assets from _articles/assets to assets/"
           mkdir -p assets
-          cp -r _articles/assets/* assets/
+          # Copy all files and subdirectories, handling the case where there might be no files
+          if [ "$(ls -A _articles/assets 2>/dev/null)" ]; then
+            cp -r _articles/assets/* assets/ 2>/dev/null || true
+            echo "Assets copied successfully"
+            ls -la assets/ || echo "No assets directory after copy"
+          else
+            echo "No assets found in _articles/assets/"
+          fi
+        else
+          echo "_articles/assets directory does not exist"
         fi
     
     - name: Convert relative asset paths to absolute URLs
       run: |
         echo "Converting relative asset paths to absolute URLs..."
+        echo "GitHub repository: ${{ github.repository }}"
+        echo "GitHub pages URL should be: https://${{ github.repository_owner }}.github.io"
+        export SITE_URL="https://${{ github.repository_owner }}.github.io"
+        echo "Setting SITE_URL to: $SITE_URL"
         chmod +x ./convert_assets.sh
         ./convert_assets.sh
+      env:
+        SITE_URL: "https://${{ github.repository_owner }}.github.io"
+    
+    - name: Debug asset conversion results
+      run: |
+        echo "=== assets directory after conversion ==="
+        ls -la assets/ || echo "assets directory not found"
+        echo "=== Sample markdown files after conversion ==="
+        find _articles -name "*.md" -exec echo "File: {}" \; -exec head -20 {} \; -exec echo "---" \; | head -50
     
     - name: Build Jekyll site
       run: |
@@ -72,6 +104,10 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
     - name: Deploy to GitHub Pages
       id: deployment
