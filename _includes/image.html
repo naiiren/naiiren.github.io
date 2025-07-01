@@ -1,0 +1,11 @@
+{% comment %}
+  This include converts relative asset paths to absolute URLs
+  Usage: {% include image.html src="assets/image.png" alt="Alt text" %}
+{% endcomment %}
+{% assign base_url = site.url | append: site.baseurl %}
+{% if include.src contains 'assets/' %}
+  {% assign full_url = base_url | append: '/' | append: include.src %}
+{% else %}
+  {% assign full_url = include.src %}
+{% endif %}
+<img src="{{ full_url }}" alt="{{ include.alt | default: '' }}" {% if include.class %}class="{{ include.class }}"{% endif %} {% if include.style %}style="{{ include.style }}"{% endif %} />

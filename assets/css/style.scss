@@ -1,0 +1,79 @@
+/* NetX Syntax Highlighting for GitHub Pages */
+/* This file extends the default minima theme with NetX language support */
+
+/* Custom NetX Syntax Highlighting */
+.language-netx .highlight {
+  background-color: #f8f8f8;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  padding: 16px;
+  overflow: auto;
+}
+
+/* NetX Keywords Group 1 - Basic keywords (bold) */
+.language-netx .k1 { color: #24292e; font-weight: bold; } /* of, in, let, for, if, then, else, when, auto, wire, bit, clock, bundle */
+
+/* NetX Keywords Group 2 - Structure keywords (violet, bold) */
+.language-netx .k2 { color: #6f42c1; font-weight: bold; } /* component, interface, import, library, application */
+
+/* NetX Emphasized words - Built-in components (royal blue, bold) */
+.language-netx .builtin { color: #0969da; font-weight: bold; } /* NOT, OR, AND, XOR, ADD, REGISTER, TO */
+
+/* NetX Comments (forest green) */
+.language-netx .comment { color: #22863a; font-style: italic; } /* // and /* */ */
+
+/* Numbers */
+.language-netx .number { color: #005cc5; } /* numbers */
+
+/* Strings */
+.language-netx .string { color: #032f62; } /* strings */
+
+/* Operators */
+.language-netx .operator { color: #d73a49; } /* operators like <>, ||, -> */
+
+/* Punctuation */
+.language-netx .punctuation { color: #24292e; } /* punctuation */
+
+/* NetX specific code block styling */
+.language-netx {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 85%;
+  line-height: 1.45;
+}
+
+/* Custom highlighting classes for JavaScript highlighter */
+.netx-keyword1 {
+  color: #24292e;
+  font-weight: bold;
+}
+
+.netx-keyword2 {
+  color: #6f42c1;
+  font-weight: bold;
+}
+
+.netx-builtin {
+  color: #0969da;
+  font-weight: bold;
+}
+
+.netx-comment {
+  color: #22863a;
+  font-style: italic;
+}
+
+.netx-number {
+  color: #005cc5;
+}
+
+.netx-string {
+  color: #032f62;
+}
+
+.netx-operator {
+  color: #d73a49;
+}
+
+.netx-punctuation {
+  color: #24292e;
+}

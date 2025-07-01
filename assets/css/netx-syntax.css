@@ -1,0 +1,107 @@
+/* Import ligature-supporting fonts */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+/* NetX Syntax Highlighting Styles */
+/* Standalone CSS for GitHub Pages compatibility */
+
+/* NetX Keywords Group 1 (basic keywords) - Bold */
+.netx-keyword1 { 
+    color: #24292e; 
+    font-weight: bold; 
+}
+
+/* NetX Keywords Group 2 (structure keywords) - Violet, Bold */
+.netx-keyword2 { 
+    color: #6f42c1; 
+    font-weight: bold; 
+}
+
+/* NetX Built-in components - Royal Blue, Bold */
+.netx-builtin { 
+    color: #0969da; 
+    font-weight: bold; 
+}
+
+/* NetX Comments - Forest Green */
+.netx-comment { 
+    color: #22863a; 
+    font-style: italic; 
+}
+
+/* Numbers */
+.netx-number { 
+    color: #005cc5; 
+}
+
+/* Strings */
+.netx-string { 
+    color: #032f62; 
+}
+
+/* Operators */
+.netx-operator { 
+    color: #d73a49; 
+}
+
+/* Code block styling */
+.language-netx {
+    background-color: #f6f8fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: auto; /* Keep auto for very long lines */
+    max-width: 100%; /* Ensure it doesn't exceed container */
+    box-sizing: border-box; /* Include padding in width calculation */
+    font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 85%;
+    line-height: 1.45;
+    
+    /* Set tab size to 2 spaces */
+    tab-size: 2;
+    -moz-tab-size: 2;
+    -o-tab-size: 2;
+    
+    /* Enable ligatures */
+    font-feature-settings: "liga" 1, "calt" 1;
+    font-variant-ligatures: common-ligatures contextual;
+    -webkit-font-feature-settings: "liga" on, "calt" on;
+    -moz-font-feature-settings: "liga" on, "calt" on;
+    -ms-font-feature-settings: "liga" on, "calt" on;
+}
+
+/* Hide scrollbar for webkit browsers when not needed */
+.language-netx::-webkit-scrollbar {
+    height: 8px;
+}
+
+.language-netx::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.language-netx::-webkit-scrollbar-thumb {
+    background: #c1c7d0;
+    border-radius: 4px;
+}
+
+.language-netx::-webkit-scrollbar-thumb:hover {
+    background: #a8b1bd;
+}
+
+.netx-highlighted {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 85%;
+    line-height: 1.45;
+    
+    /* Set tab size to 4 spaces */
+    tab-size: 4;
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    
+    /* Enable ligatures */
+    font-feature-settings: "liga" 1, "calt" 1;
+    font-variant-ligatures: common-ligatures contextual;
+    -webkit-font-feature-settings: "liga" on, "calt" on;
+    -moz-font-feature-settings: "liga" on, "calt" on;
+    -ms-font-feature-settings: "liga" on, "calt" on;
+}

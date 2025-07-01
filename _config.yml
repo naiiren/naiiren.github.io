@@ -2,12 +2,53 @@ title: Nairen's Blog
 # email: nairen@smail.nju.edu.cn
 description: ""
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "naiiren.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://naiiren.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 
 remote_theme: jekyll/minima
+
+# Custom syntax highlighting for NetX
+kramdown:
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    default_lang: text
+
+# Use collections instead of posts to avoid date requirements
+collections:
+  articles:
+    output: true
+    permalink: /:collection/:name/
+
+# Include assets from articles directory
+include:
+  - "_articles/assets"
+
+# Remove date requirements from posts
+permalink: /:name/
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      permalink: /:name/
+  - scope:
+      path: ""
+      type: "articles"
+    values:
+      layout: "post"
 
 plugins:
   - jekyll-feed
   - jekyll-remote-theme
 
-plugins:
+# Sass configuration for assets
+sass:
+  sass_dir: _sass
+  style: compressed
+
+# Asset handling
+defaults:
+  - scope:
+      path: "assets/images"
+    values:
+      image: true
