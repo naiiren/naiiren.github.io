@@ -44,32 +44,6 @@
     color: #d73a49; 
 }
 
-/* Code block styling */
-.language-netx {
-    background-color: #f6f8fa;
-    border: 1px solid #e1e4e8;
-    border-radius: 6px;
-    padding: 16px;
-    overflow-x: auto; /* Keep auto for very long lines */
-    max-width: 100%; /* Ensure it doesn't exceed container */
-    box-sizing: border-box; /* Include padding in width calculation */
-    font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-    font-size: 85%;
-    line-height: 1.45;
-    
-    /* Set tab size to 2 spaces */
-    tab-size: 2;
-    -moz-tab-size: 2;
-    -o-tab-size: 2;
-    
-    /* Enable ligatures */
-    font-feature-settings: "liga" 1, "calt" 1;
-    font-variant-ligatures: common-ligatures contextual;
-    -webkit-font-feature-settings: "liga" on, "calt" on;
-    -moz-font-feature-settings: "liga" on, "calt" on;
-    -ms-font-feature-settings: "liga" on, "calt" on;
-}
-
 /* Hide scrollbar for webkit browsers when not needed */
 .language-netx::-webkit-scrollbar {
     height: 8px;

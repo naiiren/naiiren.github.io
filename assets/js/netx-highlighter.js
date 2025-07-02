@@ -25,10 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 3. Strings (process before keywords to avoid conflicts)
         code = code.replace(/"([^"]*)"/g, '___STRING_DOUBLE_START___$1___STRING_DOUBLE_END___');
-        code = code.replace(/'([^']*)'/g, '___STRING_SINGLE_START___$1___STRING_SINGLE_END___');
         
         // 4. Binary literals (process before regular numbers)
-        code = code.replace(/\b(\d+'b[01]+)\b/g, '___NUMBER_BINARY_START___$1___NUMBER_BINARY_END___');
+        code = code.replace(/\b(\d+'[dbhoDBHO][01]+)\b/g, '___NUMBER_BINARY_START___$1___NUMBER_BINARY_END___');
         
         // 5. Regular numbers
         code = code.replace(/\b(\d+(?:\.\d+)?)\b/g, '___NUMBER_START___$1___NUMBER_END___');
@@ -43,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
         code = code.replace(/\b(NOT|OR|AND|XOR|ADD|REGISTER|TO)\b/g, '___BUILTIN_START___$1___BUILTIN_END___');
         
         // 9. NetX operators (before HTML escaping)
-        code = code.replace(/(<>|\|\||->)/g, '___OPERATOR_START___$1___OPERATOR_END___');
+        code = code.replace(/(<>|\|\||->|#)/g, '___OPERATOR_START___$1___OPERATOR_END___');
         
         // 10. Punctuation (before HTML escaping)
         code = code.replace(/([\[\]\{\}\(\),;:])/g, '___PUNCT_START___$1___PUNCT_END___');
@@ -61,7 +60,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .replace(/___COMMENT_BLOCK_START___([\s\S]*?)___COMMENT_BLOCK_END___/g, '<span class="netx-comment">/*$1*/</span>')
             .replace(/___COMMENT_LINE_START___(.*?)___COMMENT_LINE_END___/g, '<span class="netx-comment">//$1</span>')
             .replace(/___STRING_DOUBLE_START___(.*?)___STRING_DOUBLE_END___/g, '<span class="netx-string">"$1"</span>')
-            .replace(/___STRING_SINGLE_START___(.*?)___STRING_SINGLE_END___/g, '<span class="netx-string">\'$1\'</span>')
             .replace(/___NUMBER_BINARY_START___(.*?)___NUMBER_BINARY_END___/g, '<span class="netx-number">$1</span>')
             .replace(/___NUMBER_START___(.*?)___NUMBER_END___/g, '<span class="netx-number">$1</span>')
             .replace(/___KEYWORD2_START___(.*?)___KEYWORD2_END___/g, '<span class="netx-keyword2">$1</span>')

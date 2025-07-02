@@ -16,9 +16,13 @@ restore_asset_paths() {
     # Create a temporary file
     local temp_file=$(mktemp)
     
-    # Convert absolute URLs back to relative paths
+    # Convert absolute URLs back to relative paths for markdown images
     # Pattern: ![alt](https://any-domain/assets/image.ext) -> ![alt](assets/image.ext)
     sed "s|!\[\([^]]*\)\](https\?://[^/]*/assets/\([^)]*\))|![\1](assets/\2)|g" "$file" > "$temp_file"
+    
+    # Convert absolute URLs back to relative paths for HTML img tags
+    # Pattern: <img src="https://any-domain/assets/image.ext" -> <img src="assets/image.ext"
+    sed -i "s|<img\([^>]*\)src=\"https\?://[^/]*/assets/\([^\"]*\)\"|<img\1src=\"assets/\2\"|g" "$temp_file"
     
     # Move the temporary file back
     mv "$temp_file" "$file"
