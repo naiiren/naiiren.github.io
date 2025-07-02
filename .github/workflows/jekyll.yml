@@ -18,6 +18,7 @@ jobs:
     permissions:
       contents: read
       pages: write
+      id-token: write
     
     steps:
     - name: Checkout
@@ -71,20 +72,33 @@ jobs:
       run: |
         echo "Converting relative asset paths to absolute URLs..."
         echo "GitHub repository: ${{ github.repository }}"
-        echo "GitHub pages URL should be: https://${{ github.repository_owner }}.github.io"
-        export SITE_URL="https://${{ github.repository_owner }}.github.io"
+        echo "GitHub repository owner: ${{ github.repository_owner }}"
+        
+        # Set the correct site URL for GitHub Pages
+        if [ "${{ github.repository_owner }}" = "naiiren" ]; then
+          export SITE_URL="https://naiiren.github.io"
+        else
+          export SITE_URL="https://${{ github.repository_owner }}.github.io"
+        fi
+        
         echo "Setting SITE_URL to: $SITE_URL"
+        
+        # Make script executable and run it
         chmod +x ./convert_assets.sh
         ./convert_assets.sh
       env:
-        SITE_URL: "https://${{ github.repository_owner }}.github.io"
+        SITE_URL: "https://naiiren.github.io"
     
     - name: Debug asset conversion results
       run: |
         echo "=== assets directory after conversion ==="
         ls -la assets/ || echo "assets directory not found"
-        echo "=== Sample markdown files after conversion ==="
-        find _articles -name "*.md" -exec echo "File: {}" \; -exec head -20 {} \; -exec echo "---" \; | head -50
+        echo "=== Checking converted markdown files ==="
+        for file in _articles/*.md; do
+          echo "=== File: $file ==="
+          grep -n "src=" "$file" || echo "No src attributes found"
+          echo "---"
+        done
     
     - name: Build Jekyll site
       run: |
