@@ -41,14 +41,12 @@ plugins:
   - jekyll-feed
   - jekyll-remote-theme
 
+# Feed configuration for articles collection
+feed:
+  collections:
+    - articles
+
 # Sass configuration for assets
 sass:
   sass_dir: _sass
   style: compressed
-
-# Asset handling
-defaults:
-  - scope:
-      path: "assets/images"
-    values:
-      image: true

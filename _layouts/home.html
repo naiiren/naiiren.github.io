@@ -25,10 +25,16 @@ layout: base
       {%- for post in posts -%}
       <li>
         <h3>
-          <a class="post-link" href="{{ post.url | relative_url }}">
+          <a class="post-link" href="{{ post.url | relative_url }}" style="white-space: nowrap;">
             {{ post.title | escape }}
           </a>
+          {%- if post.subtitle -%}
+          <div class="post-subtitle">{{ post.subtitle }}</div>
+          {%- endif -%}
         </h3>
+        {%- if post.date -%}
+        <span class="post-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+        {%- endif -%}
         {%- if site.show_excerpts -%}
           {{ post.excerpt }}
         {%- endif -%}
