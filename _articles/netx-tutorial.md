@@ -607,6 +607,23 @@ Passed 38/38 test cases
 Elapsed time: 1.42926s
 ```
 
+### 电路可视化
+
+NetX 还提供了一个可视化工具，它接受编译产生的 Nxon 文件，并且生成电路的图形化表示。
+
+目前，可视化工具基于 [Graphviz](https://graphviz.org/) 实现，使用下面的命令生成电路图：
+
+```shell
+nx visualize _netx.toml --top CORE -o vis.dot --depth=2
+dot -T pdf vis.dot -o vis.pdf
+```
+
+这里 `--depth=2` 规定了电路图展开的深度，我们从顶层元件 `CORE` 出发只展开两层，得到：
+
+![cpu_view](assets/cpu_view.png)
+
+从图上依稀可以分辨出：整个图片最左侧比较杂乱的部分是指令译码器；右侧排线整齐的部分是寄存器堆；其余部分则是 ALU、立即数选择器等元件。不过，现在导出的电路图还有很大的改进空间：我们使用的 Graphviz 布局引擎不能很好地处理元件较多的电路，我们正在积极寻找改进方案。
+
 ### FPGA 部署
 
 在完成了上面的仿真测试后，我们就可以将设计部署到 FPGA 上了。

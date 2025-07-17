@@ -32,6 +32,7 @@ convert_asset_paths() {
     # Show original content for debugging
     echo "Original image references in $file:"
     grep -n "src=\"assets/" "$file" || echo "No HTML img asset references found"
+    grep -n "](assets/" "$file" || echo "No markdown img asset references found"
     
     # Create a temporary file
     local temp_file=$(mktemp)
@@ -40,9 +41,14 @@ convert_asset_paths() {
     # Use a more specific pattern to avoid double conversion
     sed "s|<img\([^>]*\)src=\"assets/\([^\"]*\)\"|<img\1src=\"${SITE_URL}/assets/\2\"|g" "$file" > "$temp_file"
     
+    # Convert markdown images: ![alt](assets/image.ext) -> ![alt](https://site.url/assets/image.ext)
+    # Use a more specific pattern to avoid double conversion
+    sed -i "s|!\[\([^]]*\)\](assets/\([^)]*\))|![\1](${SITE_URL}/assets/\2)|g" "$temp_file"
+    
     # Show converted content for debugging
     echo "Converted image references in $file:"
-    grep -n "src=\"https://" "$temp_file" || echo "No converted HTML img references found"
+    grep -n "src=\"${SITE_URL}/" "$temp_file" || echo "No converted HTML img references found"
+    grep -n "](${SITE_URL}/" "$temp_file" || echo "No converted markdown img references found"
     
     # Move the temporary file back
     mv "$temp_file" "$file"
