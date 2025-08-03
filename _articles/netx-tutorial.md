@@ -11,7 +11,6 @@ line_height: 2.0
 本教程只作简单介绍。更多细节可以参考 NetX 的语言手册。
 
 ## 语言概览
-
 ### 组合电路
 我们首先介绍 NetX 中最基础的两个运算符，`||` 与 `<>`，分别称作并行组合子（Parallel Combinator）与串行组合子（Sequential Combinator）。简单来说，`||` 就像把两个电路元件并排放置，而 `<>` 就像用导线连接元件的输出和输入。
 
@@ -247,14 +246,14 @@ import std.selector.MUX; // 从标准库里引入多路选择器 MUX
   *
   * This component implements a register with synchronous reset.
   *
-  * @attr pos_edge    Positive edge clock signal
-  * @attr high_rst    Active high reset signal
-  * @attr rst_value   Value to load on reset
+  * @attr pos_edge   Triggers on rising edge of clock when true
+  * @attr high_rst   Enables active-high reset when true
+  * @attr rst_value  Value to load on reset
   *
-  * @port clk         Clock signal
-  * @port rst         Reset signal
-  * @port input       Input data to be registered
-  * @port output      Output data from the register
+  * @port clk        Clock signal
+  * @port rst        Reset signal
+  * @port input      Input data to be registered
+  * @port output     Output data from the register
   */
 component REG(pos_edge, high_rst, rst_value) : [clk, rst, input] -> [output] {
 	wire clk of clock(); // 声明为时钟信号
@@ -462,13 +461,13 @@ Nxon 是基于 JSON 的硬件图底层表示，它是 NetX 编译器的标准输
   "design": {
     "type": "component",
     "id": "CORE",
-    "loc": "7:10",
+    "loc": "rv32i.nx:7:10",
     "input": ["clk@0", "rst@1", "instr@2", "dmem_out@3"],
     "output": ["imem_addr@4", "result@5", "Rb@6", "ctl.mem_op@7", "ctl.mem_wr@8"],
     "members": [
-      {"type": "clock", "id": "clk@0", "loc": "8:9"},
-      {"type": "wire", "width": 1, "id": "rst@1", "loc": "9:9"},
-      {"type": "wire", "width": 32, "id": "instr@2", "loc": "10:9"},
+      {"type": "clock", "id": "clk@0", "loc": "rv32i.nx:8:9"},
+      {"type": "wire", "width": 1, "id": "rst@1", "loc": "rv32i.nx:9:9"},
+      {"type": "wire", "width": 32, "id": "instr@2", "loc": "rv32i.nx:10:9"},
       ...
       {"type": "component", "id": "INSTR_DECODER", ... },
       {"type": "component", "id": "IMM_SELECTOR", ... },
