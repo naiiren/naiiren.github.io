@@ -17,7 +17,7 @@ line_height: 2.0
 下面我们小试牛刀，用这两个运算符把两个 2-1 与门组合成一个 4-1 与门：
 
 <center>
-<img src="assets/and.svg" alt="and" style="zoom:200%;" />
+<img src="http://127.0.0.1:4000/assets/and.svg" alt="and" style="zoom:200%;" />
 </center>
 
 我们从一个 2-1 与门 `AND` 出发，首先用 `||` 并列连接两个与门，这就得到了一个 4-2 的特殊电路元件。这个元件的内部有两个并列的与门，分别处理整个元件的前两个、后两个输入并分别输出。接下来，我们用 `<>` 将这个元件的输出串接到第三个 2-1 与门上，也就得到了一个 4-1 的电路元件——也就是一个 4-1 与门。
@@ -45,15 +45,19 @@ component HA : [a, b] -> [sum, carry] {
 
 这里，语句 `wire a, b, sum, carry of bit(1);` 定义了四个 1-bit 的“电线”元件。电线可以理解为一种特殊的 1-1 元件，它会直接将得到的输入传递到输出端口。如果一个电线的名字（比如 `a`）在代码中出现了多次，我们会认为他们是同一根电线。比如在上面的代码中，`a` 和 `b` 分别出现了两次，代表着与门和异或门的输入是相同的电线。
 
+上述代码刻画的电路图如下所示：
+
+<img src="http://127.0.0.1:4000/assets/HA.svg" alt="HA" style="zoom:200%;" />
+
 ---
 
-<img src="assets/add.svg" alt="add" style="zoom:200%;" />
+<img src="http://127.0.0.1:4000/assets/add.svg" alt="add" style="zoom:200%;" />
 
-半加器实现了 1-bit 二进制数的加法，接着我们来实现 4-bit 甚至更复杂的二进制加法。
+半加器实现了 1-bit 二进制数的加法，接着我们来实现 4-bit 甚至更复杂的二进制加法。假设我们现在有 4-bit 宽的输入 `a` 和 `b`，要输出 4-bit 和 `c`。
 
 最简单的思路是从低位向高位依次计算每一个二进制位的和，并将可能产生的进位向后传递。这里“每一个二进制位的和”可以用刚刚实现的半加器来实现。
 
-注意：除了要考虑当前的输入 `a[i]` 和 `b[i]`，我们还需要考虑前一位加法进位 `cin`。而半加器只能处理两个输入，我们还需要实现一个能将三个 1-bit 二进制数加起来的元件——也就是全加器。
+我们用 `a[i]` 表示输入 `a` 的第 `i` 位。注意：在计算每一位二进制的和时，除了要考虑当前的输入 `a[i]` 和 `b[i]`，我们还需要考虑前一位加法进位 `cin`。而半加器只能处理两个输入，我们还需要实现一个能将三个 1-bit 二进制数加起来的元件——也就是全加器。
 
 在实现全加器之前，我们先来了解一个特殊的内置元件 `TO`，它可以理解为匿名的"电线"。一般有名字的电线多次出现时，NetX 会认为他们总是同一根电线；但是 `TO` 多次出现时，它们总是不同的电线。
 
@@ -157,7 +161,7 @@ component ADDER : [a, b] -> [c] {
 
 下面展示了一个 4-2 编码器的电路图：
 
-<img src="assets/encoder.svg" alt="encoder" style="zoom:200%;" />
+<img src="http://127.0.0.1:4000/assets/encoder.svg" alt="encoder" style="zoom:200%;" />
 
 编码器的电路图乍看之下有些复杂，但仔细观察也能发现其中的规律：既然只有一个输入为 1，那么让这一位信号传递到应该为 1 的输出端口就可以了。而
 
@@ -237,6 +241,20 @@ output <> REGISTER(pos_edge = true) <> [input, clk];
 ```netx
 import std.selector.MUX; // 从标准库里引入多路选择器 MUX
 
+/**
+  * Register component
+  *
+  * This component implements a register with synchronous reset.
+  *
+  * @attr pos_edge    Positive edge clock signal
+  * @attr high_rst    Active high reset signal
+  * @attr rst_value   Value to load on reset
+  *
+  * @port clk         Clock signal
+  * @port rst         Reset signal
+  * @port input       Input data to be registered
+  * @port output      Output data from the register
+  */
 component REG(pos_edge, high_rst, rst_value) : [clk, rst, input] -> [output] {
 	wire clk of clock(); // 声明为时钟信号
 	auto input, output;  // 让编译器根据使用场景自动推断位宽
@@ -293,9 +311,9 @@ my_output <> REG(true, true, 0) <> [my_clk, my_rst, my_input]
 
 它有红绿黄三种状态，红灯亮 30 秒时将会变为绿灯，绿灯亮 25 秒后变为黄灯，黄灯亮 5 秒后变为红灯。我们可以用一个状态转移图来描述这个过程：
 
-<img src="assets/traffic.svg" alt="traffic" style="zoom:200%;" />
+<img src="http://127.0.0.1:4000/assets/traffic.svg" alt="traffic" style="zoom:200%;" />
 
-对照状态转移图，我们可以设计出下面的电路：
+假设我们已经有了一个周期为一秒的时钟信号；对照状态转移图，我们可以设计出下面的电路：
 
 ```netx
 import std.utils.REG;
@@ -324,17 +342,17 @@ component TRAFFIC_LIGHT : [clk] -> [color] {
 	wire color of State;   // 定义当前颜色 color，位宽为 2
 	wire clk of clock();
 	
-	wire change of bit(1);                    // 判断是否需要变灯
-	auto counter <> COUNTER <> [clk, change]; // 变灯时需要重置计数器
-	change <> EQ <> [
+	wire change of bit(1);	// 判断是否需要变灯
+	auto counter <> COUNTER <> [clk, change];	// 变灯时需要重置计数器
+	change <> EQ <> [	// 如果计数器的值等于当前颜色对应的阈值，则需要变灯
 		counter,
-		MUX(2) <> [color, 30, 25, 5, 0] // 根据当前颜色，决定变灯时的计数器阈值
+		MUX(2) <> [color, 30, 25, 5, 0]	// 根据当前颜色，决定变灯时的计数器阈值
 	];
 	
 	let clocked_reg = REGISTER(pos_edge = true) <> [TO, clk#]; 
-	color <> clocked_reg <> MUX(1) <> [change,  // 用于保存当前颜色状态的寄存器
-		color,                                   // 如果无需变灯，保持当前颜色
-		MUX(2) <> [color, GREEN, YELLOW, RED, 0] // 否则，根据当前颜色决定下一个颜色
+	color <> clocked_reg <> MUX(1) <> [change,	// 用于保存当前颜色状态的寄存器
+		color,	// 如果无需变灯，保持当前颜色
+		MUX(2) <> [color, GREEN, YELLOW, RED, 0]	// 否则，根据当前颜色决定下一个颜色
     ];
 }
 ```
@@ -349,11 +367,9 @@ NetX 的设计的特点在于“所见即所得”：
 
 电路图如下所示：
 
-<img src="assets/sqrt.png" alt="sqrt" style="zoom:50%;" />
+<img src="http://127.0.0.1:4000/assets/sqrt.png" alt="sqrt" style="zoom:50%;" />
 
-即便你没有读过这篇文章，完全不理解这个开方算法的原理，也可以用 NetX 重新绘制这个电路图。
-
-之后就可以通过 NetX 的编译器、仿真器等设施真正地实现这个电路。
+即便你没有读过这篇论文、也完全不理解这个开方算法的原理，还是可以用 NetX 绘制这个电路图；之后就可以通过 NetX 的编译器、仿真器等设施真正地实现这个电路。
 
 下面是这个开平方电路的 NetX 代码实现，注意观察代码中的各个元件和电路图的对应关系：
 
@@ -620,7 +636,7 @@ dot -T pdf vis.dot -o vis.pdf
 
 这里 `--depth=2` 规定了电路图展开的深度，我们从顶层元件 `CORE` 出发只展开两层，得到：
 
-![cpu_view](assets/cpu_view.png)
+![cpu_view](http://127.0.0.1:4000/assets/cpu_view.png)
 
 从图上依稀可以分辨出：整个图片最左侧比较杂乱的部分是指令译码器；右侧排线整齐的部分是寄存器堆；其余部分则是 ALU、立即数选择器等元件。不过，现在导出的电路图还有很大的改进空间：我们使用的 Graphviz 布局引擎不能很好地处理元件较多的电路，我们正在积极寻找改进方案。
 
@@ -691,5 +707,5 @@ dot -T pdf vis.dot -o vis.pdf
 下面展示了该项目成功执行测试程序，将 `0x00C0FFEE` 写入 `x10` 寄存器，标志测试通过的图片（为方便展示，这里还包括了 CPU 设计以外的七段数码管等）：
 
 <center>
-<img src="assets/FPGA.jpg" alt="FPGA" style="zoom: 20%;" />
+<img src="http://127.0.0.1:4000/assets/FPGA.jpg" alt="FPGA" style="zoom: 20%;" />
 </center>

@@ -10,7 +10,7 @@ Nairen Zhang (张乃仁)
 
 - Institute: [Pascal Research Group](https://pascal-lab.net), [Institute of Computer Software](https://cs.nju.edu.cn/ics/index.htm), School of Computer Science, Nanjing University.
 
-- Office: Room 327, Building of Computer Science and Technology, Nanjing University.
+- Office: Room 529, Building of Computer Science and Technology, Nanjing University.
 
 - ORCID: [0009-0004-3737-8768](https://orcid.org/0009-0004-3737-8768)
 
