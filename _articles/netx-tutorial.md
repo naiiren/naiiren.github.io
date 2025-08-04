@@ -497,7 +497,7 @@ Nxon 是基于 JSON 的硬件图底层表示，它是 NetX 编译器的标准输
 
 - `id`：该元件在定义时的唯一标识符
 
-- `loc`：该元件定义的源码位置，格式为 `行号:列号`。如 `"loc" : "7:10"` 表示该元件的定义在源代码的第 7 行第 10 列。
+- `loc`：该元件定义的源码位置，格式为 `文件名:行号:列号`。如 `"loc" : "rv32i.nx:7:10"` 表示该元件的定义在源代码文件 `rv32i.nx` 的第 7 行第 10 列。
 
 - `input` 和 `output`：指示该元件的输入输出线。
 
@@ -658,7 +658,7 @@ dot -T pdf vis.dot -o vis.pdf
   nx dump _netx.toml --top CORE --output core.v
   ```
 
-  将 NetX 源码首先编译到 Nxon 底层表示，之后将底层表示翻译到 Verilog。注意，这里的 Verilog 表示已接近网表级表示，避开了原生 Verilog 中的各种行为级建模，仅仅保留了 `always @(posedge clk)` 结构表示时许逻辑和 `assign lhs = rhs` 表示组合逻辑。
+  将 NetX 源码首先编译到 Nxon 底层表示，之后将底层表示翻译到 Verilog。注意，这里的 Verilog 表示已接近网表级表示，避开了原生 Verilog 中的各种行为级建模，仅仅保留了 `always @(posedge clk)` 结构表示时序逻辑和 `assign lhs = rhs` 表示组合逻辑。
 
   相连得到
 
