@@ -147,9 +147,8 @@ component ADDER : [a, b] -> [c] {
 	for (i in [0..4]) {
 		(c[i] || carry[i]) <> FA <> (
 			a[i] || b[i] || cin(i)
-       );	
+    );	
 	}
-	adder(3);
 }
 ```
 
