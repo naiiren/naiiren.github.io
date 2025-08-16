@@ -17,7 +17,7 @@ line_height: 2.0
 下面我们小试牛刀，用这两个运算符把两个 2-1 与门组合成一个 4-1 与门：
 
 <center>
-<img src="http://127.0.0.1:4000/assets/and.svg" alt="and" style="zoom:200%;" />
+<img src="assets/and.svg" alt="and" style="zoom:200%;" />
 </center>
 
 我们从一个 2-1 与门 `AND` 出发，首先用 `||` 并列连接两个与门，这就得到了一个 4-2 的特殊电路元件。这个元件的内部有两个并列的与门，分别处理整个元件的前两个、后两个输入并分别输出。接下来，我们用 `<>` 将这个元件的输出串接到第三个 2-1 与门上，也就得到了一个 4-1 的电路元件——也就是一个 4-1 与门。
@@ -47,11 +47,11 @@ component HA : [a, b] -> [sum, carry] {
 
 上述代码刻画的电路图如下所示：
 
-<img src="http://127.0.0.1:4000/assets/HA.svg" alt="HA" style="zoom:200%;" />
+<img src="assets/HA.svg" alt="HA" style="zoom:200%;" />
 
 ---
 
-<img src="http://127.0.0.1:4000/assets/add.svg" alt="add" style="zoom:200%;" />
+<img src="assets/add.svg" alt="add" style="zoom:200%;" />
 
 半加器实现了 1-bit 二进制数的加法，接着我们来实现 4-bit 甚至更复杂的二进制加法。假设我们现在有 4-bit 宽的输入 `a` 和 `b`，要输出 4-bit 和 `c`。
 
@@ -160,7 +160,7 @@ component ADDER : [a, b] -> [c] {
 
 下面展示了一个 4-2 编码器的电路图：
 
-<img src="http://127.0.0.1:4000/assets/encoder.svg" alt="encoder" style="zoom:200%;" />
+<img src="assets/encoder.svg" alt="encoder" style="zoom:200%;" />
 
 编码器的电路图乍看之下有些复杂，但仔细观察也能发现其中的规律：既然只有一个输入为 1，那么让这一位信号传递到应该为 1 的输出端口就可以了。而
 
@@ -310,7 +310,7 @@ my_output <> REG(true, true, 0) <> [my_clk, my_rst, my_input]
 
 它有红绿黄三种状态，红灯亮 30 秒时将会变为绿灯，绿灯亮 25 秒后变为黄灯，黄灯亮 5 秒后变为红灯。我们可以用一个状态转移图来描述这个过程：
 
-<img src="http://127.0.0.1:4000/assets/traffic.svg" alt="traffic" style="zoom:200%;" />
+<img src="assets/traffic.svg" alt="traffic" style="zoom:200%;" />
 
 假设我们已经有了一个周期为一秒的时钟信号；对照状态转移图，我们可以设计出下面的电路：
 
@@ -345,16 +345,42 @@ component TRAFFIC_LIGHT : [clk] -> [color] {
 	auto counter <> COUNTER <> [clk, change];	// 变灯时需要重置计数器
 	change <> EQ <> [	// 如果计数器的值等于当前颜色对应的阈值，则需要变灯
 		counter,
-		MUX(2) <> [color, 30, 25, 5, 0]	// 根据当前颜色，决定变灯时的计数器阈值
+			MUX(2) <> {	// 根据当前颜色，决定变灯时的计数器阈值
+			sel          : color, 
+			case[RED]    : 30, 
+			case[GREEN]  : 25, 
+			case[YELLOW] : 5, 
+			$default     : 0
+		}
 	];
 	
 	let clocked_reg = REGISTER(pos_edge = true) <> [TO, clk#]; 
 	color <> clocked_reg <> MUX(1) <> [change,	// 用于保存当前颜色状态的寄存器
 		color,	// 如果无需变灯，保持当前颜色
-		MUX(2) <> [color, GREEN, YELLOW, RED, 0]	// 否则，根据当前颜色决定下一个颜色
+		MUX(2) <> {	// 否则，根据当前颜色决定下一个颜色
+			sel          : color, 
+			case[RED]    : GREEN, 
+			case[GREEN]  : YELLOW, 
+			case[YELLOW] : GREEN, 
+			$default     : RED
+		}
     ];
 }
 ```
+
+注意，这里 `MUX` 又用到了按名字连接的语法。这里的表达式
+
+```netx
+MUX(2) <> {	// 根据当前颜色，决定变灯时的计数器阈值
+    sel          : color, 
+    case[RED]    : 30, 
+    case[GREEN]  : 25, 
+    case[YELLOW] : 5, 
+    $default     : 0
+}
+```
+
+实际上等价于 `MUX(2) <> [color, 30, 25, 5, 0]`，几个输入分别对应 `MUX(2)` 模块的输入端口 `[sel, case[0], case[1], case[2], case[3]]`。使用按名连接的方式让代码变得更清晰了。
 
 ---
 
@@ -366,7 +392,7 @@ NetX 的设计的特点在于“所见即所得”：
 
 电路图如下所示：
 
-<img src="http://127.0.0.1:4000/assets/sqrt.png" alt="sqrt" style="zoom:50%;" />
+<img src="assets/sqrt.png" alt="sqrt" style="zoom:50%;" />
 
 即便你没有读过这篇论文、也完全不理解这个开方算法的原理，还是可以用 NetX 绘制这个电路图；之后就可以通过 NetX 的编译器、仿真器等设施真正地实现这个电路。
 
@@ -635,7 +661,7 @@ dot -T pdf vis.dot -o vis.pdf
 
 这里 `--depth=2` 规定了电路图展开的深度，我们从顶层元件 `CORE` 出发只展开两层，得到：
 
-![cpu_view](http://127.0.0.1:4000/assets/cpu_view.png)
+![cpu_view](assets/cpu_view.png)
 
 从图上依稀可以分辨出：整个图片最左侧比较杂乱的部分是指令译码器；右侧排线整齐的部分是寄存器堆；其余部分则是 ALU、立即数选择器等元件。不过，现在导出的电路图还有很大的改进空间：我们使用的 Graphviz 布局引擎不能很好地处理元件较多的电路，我们正在积极寻找改进方案。
 
@@ -706,5 +732,5 @@ dot -T pdf vis.dot -o vis.pdf
 下面展示了该项目成功执行测试程序，将 `0x00C0FFEE` 写入 `x10` 寄存器，标志测试通过的图片（为方便展示，这里还包括了 CPU 设计以外的七段数码管等）：
 
 <center>
-<img src="http://127.0.0.1:4000/assets/FPGA.jpg" alt="FPGA" style="zoom: 20%;" />
+<img src="assets/FPGA.jpg" alt="FPGA" style="zoom: 20%;" />
 </center>
