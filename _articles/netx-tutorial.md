@@ -147,7 +147,7 @@ component ADDER : [a, b] -> [c] {
 	for (i in [0..4]) {
 		(c[i] || carry[i]) <> FA <> (
 			a[i] || b[i] || cin(i)
-    );	
+		);	
 	}
 }
 ```
@@ -221,10 +221,10 @@ component ENCODER(n) : [input] -> [output] {
 NetX 内置了一个简单的寄存器 `REGISTER`，使用时大概像是这样：
 
 ```netx
-output <> REGISTER(pos_edge = true) <> [input, clk];
+output <> REGISTER(pos_edge = true) <> [clk, input];
 ```
 
-寄存器有两个输入信号，记作 `input` 和 `clk`。其中 `clk` 是时钟信号：
+寄存器有两个输入信号，记作 `clk` 和 `input`。其中 `clk` 是时钟信号：
 
 - 如果寄存器是上升沿触发的（`pos_edge = true`），那么当 `clk` 从 `0` 变为 `1` 时，寄存器才会把当前 `input` 的值存储下来。
 - 如果寄存器是下降沿触发的（`pos_edge = false`），那么当 `clk` 从 `1` 变为 `0` 时，寄存器才会把当前 `input` 的值存储下来。
@@ -255,16 +255,16 @@ import std.selector.MUX; // 从标准库里引入多路选择器 MUX
   * @port output     Output data from the register
   */
 component REG(pos_edge, high_rst, rst_value) : [clk, rst, input] -> [output] {
-	wire clk of clock(); // 声明为时钟信号
+	wire clk of clock(); // 声明为时钟信号，也可以直接写成 wire clk of clock;
 	auto input, output;  // 让编译器根据使用场景自动推断位宽
 	
-	output <> REGISTER(pos_edge) <> (
-		MUX(1) <> (
-            if high_rst 
-            then [rst, input, rst_value]
-            else [rst, rst_value, input]
-        ) || clk
-	);
+	output <> REGISTER(pos_edge) <> [
+		clk, MUX(1) <> (
+			if high_rst 
+			then [rst, input, rst_value]
+			else [rst, rst_value, input]
+		)
+	];
 }
 ```
 
@@ -333,7 +333,7 @@ component COUNTER : [clk, rst] -> [count] {
 	// 当 rst 信号到来时重置为 0，否则每个时钟周期加 1
 	count <> REG (
 		pos_edge=true, high_rst=true, rst_value=0
-    ) <> [clk, rst, ADD <> [count, 1]];
+		) <> [clk, rst, ADD <> [count, 1]];
 }
 
 // 红绿灯状态机组件
@@ -364,7 +364,7 @@ component TRAFFIC_LIGHT : [clk] -> [color] {
 			case[YELLOW] : GREEN, 
 			$default     : RED
 		}
-    ];
+	];
 }
 ```
 
@@ -372,11 +372,11 @@ component TRAFFIC_LIGHT : [clk] -> [color] {
 
 ```netx
 MUX(2) <> {	// 根据当前颜色，决定变灯时的计数器阈值
-    sel          : color, 
-    case[RED]    : 30, 
-    case[GREEN]  : 25, 
-    case[YELLOW] : 5, 
-    $default     : 0
+	sel          : color, 
+	case[RED]    : 30, 
+	case[GREEN]  : 25, 
+	case[YELLOW] : 5, 
+	$default     : 0
 }
 ```
 
