@@ -22,13 +22,19 @@ Nairen Zhang (张乃仁)
 
   Studying for a Ph.D. Degree in Computer Science and Technology. 
 
-  Supervised by [Assoc. Prof. Yue Li](https://yuelee.bitbucket.io/).
+  Supervised by [Prof. Yue Li](https://cs.nju.edu.cn/yueli/).
   
 - Nanjing University (2020.09 - 2024.07)
 
   Conferred a B.Sc. Degree in Computer Science and Technology.
 
 ## Publications
+
+- PLDI'26
+
+  [*Exploiting Sophisticated Static Analysis for Verilog*](https://doi.org/10.1145/380830)
+
+  Qinlin Chen, *Nairen Zhang*, Jinpeng Wang, Jiacai Cui, Tian Tan\*, Xiaoxing Ma, Chang Xu, Jian Lu, Yue Li\*
 
 - OOPSLA'23
 
